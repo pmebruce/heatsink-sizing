@@ -1,7 +1,7 @@
-/* HS Design: scope-relative offline shell; generated ab9571604d44f56f. */
+/* HS Design: scope-relative offline shell; generated 82771e7d40e79c64. */
 const PREFIX = 'hs-pages-' + new URL(self.registration.scope).pathname;
-const CACHE = PREFIX + 'ab9571604d44f56f';
-const ASSETS = ["index.html","manifest.webmanifest","favicon.svg","assets/index-B4FszZ9A.js","assets/index-Cep_Tr1J.css","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png"].map(p => new URL(p, self.registration.scope).href);
+const CACHE = PREFIX + '82771e7d40e79c64';
+const ASSETS = ["index.html","manifest.webmanifest","favicon.svg","assets/index-D-Okii3J.css","assets/index-jD5xaA8H.js","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png"].map(p => new URL(p, self.registration.scope).href);
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
   try {

@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import DesignApp from "./design-app";
+import HeatsinkApp from "@/app/heatsink-app";
 import "../app/globals.css";
-import "./design.css";
-createRoot(document.getElementById("root")!).render(<DesignApp/>);
+createRoot(document.getElementById("root")!).render(<HeatsinkApp/>);
