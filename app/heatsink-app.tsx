@@ -239,7 +239,7 @@ export default function HeatsinkApp() {
 
   return <div data-heatsink-app="v2">
     <header className="app-header"><div className="header-inner">
-      <div className="brand"><div className="brand-icon" aria-hidden="true">HS</div><div><div className="brand-title">散熱片計算</div><div className="brand-caption">HEATSINK SIZING</div></div></div>
+      <div className="brand"><img className="brand-icon brand-icon-image" src="./icons/icon-192.png" alt="散熱片計算 Logo"/><div><div className="brand-title">散熱片計算</div><div className="brand-caption">HEATSINK SIZING</div></div></div>
       <div className="header-actions"><span className={`connection${!online ? " offline" : ""}`}><span className="status-dot"/>{status}</span>
         {!standalone && <Button className="app-button" variant="outline" onClick={install}><ArrowDownToLine/>加入主畫面</Button>}
       </div>
@@ -310,7 +310,7 @@ export default function HeatsinkApp() {
       <ResultDetails result={result} input={input} includeChassis={includeChassis} orientation={orientation}/>
       <footer className="page-footer"><span>等溫近似 · 乾空氣 1 atm · 初步尺寸評估</span><span>{status} · HS 2.0</span></footer>
     </main>
-    <Dialog open={installOpen} onOpenChange={setInstallOpen}><DialogContent className="install-dialog"><DialogHeader><DialogTitle>加入「散熱片計算」</DialogTitle><DialogDescription>主畫面圖示顯示 HS，點一下即可開啟計算器。</DialogDescription></DialogHeader>
+    <Dialog open={installOpen} onOpenChange={setInstallOpen}><DialogContent className="install-dialog"><DialogHeader><DialogTitle>加入「散熱片計算」</DialogTitle><DialogDescription>主畫面會顯示散熱片圖示，點一下即可開啟計算器。</DialogDescription></DialogHeader>
       {ios ? <ol className="install-steps"><li>在 <strong>Safari</strong> 開啟此頁。</li><li>點選瀏覽器的<strong>分享 <Share2 size={17} className="inline"/></strong>。</li><li>選擇<strong>「加入主畫面」</strong>，再點「加入」。若有「以網頁 App 開啟」，請保持開啟。</li></ol> : <ol className="install-steps"><li>使用 Chrome 或 Edge 開啟此頁。</li><li>開啟瀏覽器選單，選擇<strong>「安裝應用程式」</strong>或<strong>「加入主畫面」</strong>。</li><li>若沒有安裝選項，可先將此頁加入書籤。</li></ol>}
       <p className="install-offline">{offlineReady ? "離線功能已就緒。首次開啟可能需要登入；完成載入後，計算可在離線狀態執行。" : offlineFailed ? "此瀏覽器尚未啟用離線功能；目前可正常在線上計算。" : "請保持網路連線，待頁面顯示「可離線使用」後再離線。"}</p>
       <Button className="app-button install-close" onClick={()=>setInstallOpen(false)}>知道了<Check/></Button>

@@ -10,7 +10,7 @@ const manifest = {
 };
 await writeFile(new URL('manifest.webmanifest', root), JSON.stringify(manifest, null, 2));
 await writeFile(new URL('.nojekyll', root), '');
-const files = ['index.html', 'manifest.webmanifest', 'favicon.svg'];
+const files = ['index.html', 'manifest.webmanifest', 'favicon.png'];
 for (const dir of ['assets', 'icons']) for (const name of await readdir(new URL(dir + '/', root))) files.push(dir + '/' + name);
 const hash = createHash('sha256');
 for (const path of files) hash.update(await readFile(new URL(path, root)));
