@@ -60,3 +60,7 @@ footer,.app-footer,.page-footer,.footer-note{font-size:12.96px!important;line-he
 :is(.formula-panel,.formula-reference,.formula-section,.calculation-report,.method-panel,.reference,.details,#formulas,.notes-panel) :is(h2,.panel-heading,.section-heading,.report-heading){font-size:18px!important;line-height:1.5!important}
 :is(.formula-panel,.formula-reference,.formula-section,.calculation-report,.method-panel,.reference,.details,#formulas,.notes-panel) :is(h3,summary,[data-slot="accordion-trigger"],.accordion-trigger,.step-heading){font-size:16px!important;line-height:1.6!important}
 .formula,.formula-box,.formula-line,.formula-content,.formula-content code,.accordion-body,.equation,.equation b,.inline-eq,.formula-general,.formula-substitution,.formula-result,.property-readout,.property-readout span,.property-readout code,.substitution,.calculation-steps,.calculation-step,.method-notes,.calculation-notes{font-size:14px!important;line-height:1.7!important}
+
+/* Keep all expanded calculation prose at the same compact size. */
+.details-panel .accordion-body :is(p,li,div,span,code,strong,b,dt,dd,th,td){font-size:14px!important;line-height:1.7!important}
+.details-panel .accordion-body .formula-heading{font-size:16px!important;line-height:1.6!important}
