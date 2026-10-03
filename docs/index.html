@@ -76,16 +76,21 @@ header.tool-hero h1{font-size:25px!important}
 .tool-home-link,.tool-install{font-size:15px!important}
 }
 </style>
-</head><body><div id="root"></div><script id="tool-hero-runtime-v1">
-window.addEventListener('DOMContentLoaded',function(){
+</head><body><div id="root"></div><script id="tool-hero-runtime-v2">
+(function(){
+function mount(){
   var oldHeader=document.querySelector('.app-header'),intro=document.querySelector('.page-intro');
-  if(!oldHeader||!intro||document.querySelector('.tool-hero'))return;
+  if(document.querySelector('.tool-hero'))return true;
+  if(!oldHeader||!intro)return false;
   var hero=document.createElement('header');hero.className='tool-hero';
   hero.innerHTML='<div class="tool-hero-nav"><a class="tool-home-link" href="https://pmebruce.github.io/engineering-toolbox/">← 工程工具箱</a></div><div class="tool-hero-main"><img class="tool-hero-logo" src="./icons/icon-192.png" alt="散熱片計算 Logo"><div class="tool-hero-copy"><p class="tool-kicker">HEATSINK / NATURAL CONVECTION</p><h1>散熱片尺寸評估</h1></div></div><p class="tool-hero-description">調整幾何、擺放方式與溫度，即時比較散熱能力。</p>';
   var button=oldHeader.querySelector('.app-button');
   if(button){button.classList.add('tool-install');hero.querySelector('.tool-hero-nav').appendChild(button);}
   else{button=document.createElement('button');button.type='button';button.className='tool-install';button.textContent='已安裝';hero.querySelector('.tool-hero-nav').appendChild(button);}
-  oldHeader.parentNode.insertBefore(hero,oldHeader);oldHeader.style.display='none';intro.style.display='none';
-});
+  oldHeader.parentNode.insertBefore(hero,oldHeader);oldHeader.style.display='none';intro.style.display='none';return true;
+}
+function start(){if(mount())return;var observer=new MutationObserver(function(){if(mount())observer.disconnect();});observer.observe(document.documentElement,{childList:true,subtree:true});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
 </script>
 </body></html>
