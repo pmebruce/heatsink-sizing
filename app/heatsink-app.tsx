@@ -238,14 +238,12 @@ export default function HeatsinkApp() {
   const status = !online ? "離線計算" : offlineReady ? "可離線使用" : offlineFailed ? "線上使用中" : "準備離線功能";
 
   return <div data-heatsink-app="v2">
-    <header className="app-header"><div className="header-inner">
-      <div className="brand"><img className="brand-icon brand-icon-image" src="./icons/icon-192.png" alt="散熱片計算 Logo"/><div><div className="brand-title">散熱片計算</div><div className="brand-caption">HEATSINK SIZING</div></div></div>
-      <div className="header-actions"><span className={`connection${!online ? " offline" : ""}`}><span className="status-dot"/>{status}</span>
-        {!standalone && <Button className="app-button" variant="outline" onClick={install}><ArrowDownToLine/>加入主畫面</Button>}
-      </div>
-    </div></header>
+    <header className="tool-hero">
+      <div className="tool-hero-nav"><a className="tool-home-link" href="https://pmebruce.github.io/engineering-toolbox/">← 工程工具箱</a><Button className="app-button tool-install" variant="outline" onClick={install}><ArrowDownToLine/>{standalone?'已安裝':'加入主畫面'}</Button></div>
+      <div className="tool-hero-main"><img className="tool-hero-logo" src="./icons/icon-192.png" alt="散熱片計算 Logo"/><div className="tool-hero-copy"><p className="tool-kicker">HEATSINK / NATURAL CONVECTION</p><h1>散熱片尺寸評估</h1></div></div>
+      <p className="tool-hero-description">調整幾何、擺放方式與溫度，即時比較散熱能力。</p>
+    </header>
     <main className="page">
-      <div className="page-intro"><div><div className="eyebrow">THERMAL DESIGN / 自然對流</div><h1>散熱片尺寸評估</h1><p className="intro-description">調整幾何、擺放方式與溫度，即時比較散熱能力。</p></div><div className="environment-tag"><Wind size={17}/>{finsUp ? "水平朝上" : "直立鰭片"} · 無風扇</div></div>
       <div className="mobile-live" aria-live="polite" aria-atomic="true"><div><div className="mobile-live-label">預估總散熱量</div><a href="#results">查看完整結果 ↓</a></div><div><strong>{fmt(result?.total)}</strong><small>W</small></div></div>
       <div className="workbench">
         <div className="input-column">
