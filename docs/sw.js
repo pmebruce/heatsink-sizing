@@ -1,6 +1,6 @@
-/* HS Design: scope-relative offline shell; generated 2884dfa78bab6e4c. */
+/* HS Design: scope-relative offline shell; generated typography-20261003-v1. */
 const PREFIX = 'hs-pages-' + new URL(self.registration.scope).pathname;
-const CACHE = PREFIX + '2884dfa78bab6e4c';
+const CACHE = PREFIX + 'typography-20261003-v1';
 const ASSETS = ["index.html","manifest.webmanifest","favicon.png","assets/index-LEJ3BTSA.css","assets/index-aCC7fdSN.js","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png"].map(p => new URL(p, self.registration.scope).href);
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
