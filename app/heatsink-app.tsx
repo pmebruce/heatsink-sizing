@@ -100,15 +100,15 @@ function HorizontalConvectionDetails({ result: r, input: i, includeChassis }: { 
   return <>
     <h3 className="formula-heading">2. 水平基板、鰭片朝上的自然對流</h3>
     <div className="formula-block">
-      <p>採用 Tari & Mehrtash 水平鰭片陣列平均對流式。此處 H 是水平通道長度、L 是向上的鰭片高度，與原論文的 H、L 定義相反。</p>
+      <p>採用 Tari & Mehrtash 水平鰭片陣列平均對流式。L 為水平通道長度，H 為垂直鰭片高度。</p>
       <p className="formula-line">T<sub>film</sub> = (T<sub>hs</sub> + T<sub>a</sub>)/2 + 273.15 = {fmt(a.air.temperature,2)} K</p>
       <p>乾空氣、1 atm；Sutherland 式計算 μ 與 k，cₚ = 1,006 J/(kg·K)，ρ = p/(287.05·T)，β = 1/T。</p>
       <p>k = {fmt(a.air.k,5)} W/(m·K)，ν = {sci(a.air.nu)} m²/s，α = {sci(a.air.alpha)} m²/s，Pr = {fmt(a.air.pr,3)}。</p>
       <p className="formula-line">Ra<sub>S</sub> = g·β·ΔT·S³/(ν·α) = {sci(a.rayleigh)}</p>
-      <p className="formula-line">Ra′ = Ra<sub>S</sub>·(L/H)<sup>0.5</sup>·(S/L)<sup>0.38</sup> = {fmt(a.modifiedRayleigh,2)}</p>
+      <p className="formula-line">Ra′ = Ra<sub>S</sub>·(H/L)<sup>0.5</sup>·(S/H)<sup>0.38</sup> = {fmt(a.modifiedRayleigh,2)}</p>
       <p className="formula-line">Nu<sub>S</sub> = 0.0915·(Ra′)<sup>0.436</sup> = {fmt(a.nusselt,3)}</p>
       <p className="formula-line">h<sub>array</sub> = k·Nu<sub>S</sub>/S = <strong>{fmt(a.h,3)} W/(m²·K)</strong></p>
-      <p className="formula-line">A<sub>array</sub> = WH + 2NLH + 2NLt𝒻 + 2tᵦ(W + H) = {fmt(r.arrayArea,5)} m²</p>
+      <p className="formula-line">A<sub>array</sub> = WL + 2NLH + 2NHt𝒻 + 2tᵦ(W + L) = {fmt(r.arrayArea,5)} m²</p>
       <p>面積包含鰭片雙側、頂端、兩端面、槽底與基板邊緣；不含貼合背面。平均 h 近似套用於全部外露面積，基板小邊緣亦採相同 h。</p>
       <p className="formula-line">Q<sub>conv,hs</sub> = h<sub>array</sub>·A<sub>array</sub>·(T<sub>hs</sub> − T<sub>a</sub>) = <strong>{fmt(r.sinkConvection)} W</strong></p>
       <p><strong>幾何適用範圍：</strong>{a.outsideLimits.length === 0 ? "目前符合下列三項條件。" : "目前超出部分條件，結果為外推粗估。"}</p>
@@ -119,17 +119,17 @@ function HorizontalConvectionDetails({ result: r, input: i, includeChassis }: { 
     <h3 className="formula-heading">3. 下方機殼的自然對流</h3>
     <div className="formula-block">
       <p>機殼頂面與散熱片貼合，不計入；四個側面採垂直平板式，底面採熱面朝下的水平平板式。各面以機殼與環境的膜溫計算物性。</p>
-      <p className="formula-line">A<sub>case,v</sub> = 2X(W + H) = {fmt(r.chassisVerticalArea,5)} m²</p>
+      <p className="formula-line">A<sub>case,v</sub> = 2X(W + L) = {fmt(r.chassisVerticalArea,5)} m²</p>
       <p className="formula-line">Ra<sub>X</sub> = g·β·(T<sub>case</sub> − T<sub>a</sub>)·X³/(ν·α) = {sci(r.chassisPlate.rayleigh)}</p>
       <p className="formula-line">Nu<sub>X</sub> = 0.68 + 0.670·Ra<sub>X</sub><sup>1/4</sup> / [1 + (0.492/Pr)<sup>9/16</sup>]<sup>4/9</sup></p>
       <p>Ra ≤ 10⁹ 採上式；較高 Ra 採 Churchill–Chu 全域式：</p>
       <p className="formula-line">Nu<sub>X</sub> = [0.825 + 0.387·Ra<sub>X</sub><sup>1/6</sup> / [1 + (0.492/Pr)<sup>9/16</sup>]<sup>8/27</sup>]²</p>
       <p>h<sub>v</sub> = Nu<sub>X</sub>·k/X = {fmt(r.chassisPlate.h,3)} W/(m²·K)。</p>
-      <p className="formula-line">A<sub>case,down</sub> = WH = {fmt(r.chassisHorizontalArea,5)} m²；L<sub>c</sub> = WH/[2(W + H)] = {fmt(r.horizontal.characteristicLength,5)} m</p>
+      <p className="formula-line">A<sub>case,down</sub> = WL = {fmt(r.chassisHorizontalArea,5)} m²；L<sub>c</sub> = WL/[2(W + L)] = {fmt(r.horizontal.characteristicLength,5)} m</p>
       <p className="formula-line">Nu<sub>down</sub> = 0.27·Ra<sub>Lc</sub><sup>1/4</sup>；h<sub>down</sub> = Nu<sub>down</sub>·k/L<sub>c</sub></p>
       <p>底面 Ra = {sci(r.horizontal.rayleigh)}，h<sub>down</sub> = {fmt(r.horizontal.down,3)} W/(m²·K)。</p>
       {includeChassis && r.horizontal.rayleigh < 1e5 && i.chassisTemperature > i.ambient && <p className="model-note">底面 Ra 低於常用 10⁵ 下限，此面對流為外推粗估。</p>}
-      <p className="formula-line">Q<sub>conv,case</sub> = [h<sub>v</sub>·2X(W + H) + h<sub>down</sub>·WH]·(T<sub>case</sub> − T<sub>a</sub>) = <strong>{fmt(r.chassisConvection)} W</strong></p>
+      <p className="formula-line">Q<sub>conv,case</sub> = [h<sub>v</sub>·2X(W + L) + h<sub>down</sub>·WL]·(T<sub>case</sub> − T<sub>a</sub>) = <strong>{fmt(r.chassisConvection)} W</strong></p>
       <p>{includeChassis ? "此估算假設機殼底面懸空通風；若貼在桌面或安裝板上，底面散熱條件會改變。" : "目前選擇僅散熱片，機殼對流與輻射皆設為零。"}</p>
     </div>
   </>;
@@ -151,7 +151,7 @@ export function ResultDetails({ result: r, input: i, includeChassis, orientation
         {!r ? <p>請先修正輸入欄位，即可顯示完整計算過程。</p> : <>
           <p>以下長度代入公式前皆換算為 m；溫差用 K 或 °C，四次方輻射溫度使用 K。</p>
           <h3 className="formula-heading">1. 幾何與鋁材重量</h3>
-          <div className="formula-block"><p className="formula-line">S = (W − N·t𝒻) / (N − 1)</p><p>({fmt(i.width)} − {i.fins} × {fmt(i.finThickness)}) / ({i.fins} − 1) = <strong>{fmt(r.spacing,2)} mm</strong></p><p className="formula-line">m = ρ<sub>Al</sub> · (W·H·tᵦ + N·H·L·t𝒻)</p><p>ρ<sub>Al</sub> = 2,700 kg/m³ → <strong>{fmt(r.massGrams)} g</strong>；重量只含基板與鰭片。</p></div>
+          <div className="formula-block"><p className="formula-line">S = (W − N·t𝒻) / (N − 1)</p><p>({fmt(i.width)} − {i.fins} × {fmt(i.finThickness)}) / ({i.fins} − 1) = <strong>{fmt(r.spacing,2)} mm</strong></p><p className="formula-line">m = ρ<sub>Al</sub> · ({finsUp ? "W·L·tᵦ" : "W·H·tᵦ"} + N·H·L·t𝒻)</p><p>ρ<sub>Al</sub> = 2,700 kg/m³ → <strong>{fmt(r.massGrams)} g</strong>；重量只含基板與鰭片。</p></div>
           {finsUp ? <HorizontalConvectionDetails result={r} input={i} includeChassis={includeChassis}/> : <>
           <h3 className="formula-heading">2. 空氣物性與鰭片通道對流</h3>
           <div className="formula-block"><p className="formula-line">T<sub>film</sub> = (T<sub>hs</sub> + T<sub>a</sub>) / 2 + 273.15 = {fmt(r.sinkPlate.air.temperature,2)} K</p><p>乾空氣、1 atm；Sutherland 式計算 μ 與 k。cₚ = 1,006 J/(kg·K)，ρ = p/(287.05·T)，β = 1/T。</p><p>k = {fmt(r.sinkPlate.air.k,5)} W/(m·K)，ν = {sci(r.sinkPlate.air.nu)} m²/s，α = {sci(r.sinkPlate.air.alpha)} m²/s，Pr = {fmt(r.sinkPlate.air.pr,3)}。</p><p className="formula-line">E = g·β·ΔT·S⁴ / (ν·α·H) = {fmt(r.elenbaas,2)}</p><p className="formula-line">Nu<sub>S</sub> = [576/E² + 2.873/E<sup>0.5</sup>]<sup>−0.5</sup></p><p className="formula-line">h<sub>ch</sub> = k·Nu<sub>S</sub>/S = <strong>{fmt(r.channelH,3)} W/(m²·K)</strong></p><p className="formula-line">A<sub>ch</sub> = (N − 1)·H·(2L + S) = {fmt(r.channelArea,5)} m²</p><p>通道式採 Bar-Cohen / Rohsenow 平行等溫板關係式；本工具以同一 h<sub>ch</sub> 近似槽底表面。</p></div>
@@ -159,17 +159,17 @@ export function ResultDetails({ result: r, input: i, includeChassis, orientation
           <div className="formula-block"><p className="formula-line">Ra<sub>H</sub> = g·β·ΔT·H³ / (ν·α) = {sci(r.sinkPlate.rayleigh)}</p><p className="formula-line">Nu<sub>H</sub> = 0.68 + 0.670·Ra<sub>H</sub><sup>1/4</sup> / [1 + (0.492/Pr)<sup>9/16</sup>]<sup>4/9</sup></p><p>Ra ≤ 10⁹ 採上式；較高 Ra 改用 Churchill–Chu 全域式：</p><p className="formula-line">Nu<sub>H</sub> = [0.825 + 0.387·Ra<sub>H</sub><sup>1/6</sup> / [1 + (0.492/Pr)<sup>9/16</sup>]<sup>8/27</sup>]²</p><p>h = Nu·k/H；散熱片外側 h = <strong>{fmt(r.sinkPlate.h,3)} W/(m²·K)</strong>。</p><p className="formula-line">A<sub>out,v</sub> = 2LH + N·t𝒻·H + 2tᵦ·H = {fmt(r.outerVerticalArea,5)} m²</p><p className="formula-line">Q<sub>conv,hs</sub> = (h<sub>ch</sub>·A<sub>ch</sub> + h<sub>out</sub>·A<sub>out,v</sub>)·(T<sub>hs</sub> − T<sub>a</sub>)</p><p>散熱片對流 = <strong>{fmt(r.sinkConvection)} W</strong>。鰭片與基板的頂底小端面對流忽略。</p><p className="formula-line">A<sub>case,v</sub> = WH + 2XH；A<sub>case,top</sub> = WX</p><p>機殼以自己的膜溫求 h；背面及兩側用垂直板式，頂底面用水平板式，特徵長度 L<sub>c</sub> = WX/[2(W + X)]。</p><p className="formula-line">Nu<sub>up</sub> = 0.54·Ra<sup>1/4</sup> (Ra ≤ 10⁷)，0.15·Ra<sup>1/3</sup> (Ra &gt; 10⁷)</p><p className="formula-line">Nu<sub>down</sub> = 0.27·Ra<sup>1/4</sup></p><p>水平面 Ra = {sci(r.horizontal.rayleigh)}；向上 h = {fmt(r.horizontal.up,3)}，向下 h = {fmt(r.horizontal.down,3)} W/(m²·K)。</p>{includeChassis && r.horizontal.rayleigh < 1e5 && i.chassisTemperature > i.ambient && <p className="model-note">目前水平面 Ra 偏低，底面已低於常用 10⁵ 下限；頂底對流屬外推粗估。上表保留其貢獻，供設計比對。</p>}<p className="formula-line">Q<sub>conv,case</sub> = [h<sub>v</sub>·(WH + 2XH) + (h<sub>up</sub> + h<sub>down</sub>)·WX]·(T<sub>case</sub> − T<sub>a</sub>)</p><p>機殼對流 = <strong>{fmt(r.chassisConvection)} W</strong>{!includeChassis && "（此模式未納入）"}。</p></div>
           </>}
           <h3 className="formula-heading">4. 輻射與鰭片遮蔽</h3>
-          <div className="formula-block"><p>相鄰鰭片採長 U 形灰體腔的集中近似，以{finsUp ? "上方" : "前方"}開口向環境輻射；假設周圍輻射溫度等於環境溫度。</p><p className="formula-line">A<sub>open</sub> = (N − 1)SH = {fmt(r.openingArea,5)} m²</p><p className="formula-line">A<sub>ch</sub> = (N − 1)H(2L + S) = {fmt(r.channelArea,5)} m²</p><p className="formula-line">ε<sub>eff</sub> = 1 / [1 + (1 − ε)·A<sub>open</sub>/(ε·A<sub>ch</sub>)] = {fmt(r.effectiveEmissivity,4)}</p><p>ε = 0 時，所有輻射項直接設為 0。</p><p className="formula-line">A<sub>direct</sub> = 2LH + Nt𝒻H + 2tᵦH + 2Wtᵦ + 2NLt𝒻 = {fmt(r.directRadiationArea,5)} m²</p><p className="formula-line">Q<sub>rad,hs</sub> = σ·(ε<sub>eff</sub>A<sub>open</sub> + εA<sub>direct</sub>)·(T<sub>hs,K</sub>⁴ − T<sub>a,K</sub>⁴)</p><p className="formula-line">Q<sub>rad,case</sub> = εσ·(WH + 2XH + 2WX)·(T<sub>case,K</sub>⁴ − T<sub>a,K</sub>⁴)</p><p>σ = 5.670374419 × 10⁻⁸ W/(m²·K⁴)。散熱片輻射 = {fmt(r.sinkRadiation)} W；機殼輻射 = {fmt(r.chassisRadiation)} W。</p><p>此腔體模型忽略通道沿 H 方向的兩端開口、局部視角係數與非均勻 radiosity，屬尺寸評估近似。</p></div>
+          <div className="formula-block"><p>相鄰鰭片採長 U 形灰體腔的集中近似，以{finsUp ? "上方" : "前方"}開口向環境輻射；假設周圍輻射溫度等於環境溫度。</p><p className="formula-line">A<sub>open</sub> = (N − 1)S{finsUp ? "L" : "H"} = {fmt(r.openingArea,5)} m²</p><p className="formula-line">A<sub>ch</sub> = (N − 1){finsUp ? "L(2H + S)" : "H(2L + S)"} = {fmt(r.channelArea,5)} m²</p><p className="formula-line">ε<sub>eff</sub> = 1 / [1 + (1 − ε)·A<sub>open</sub>/(ε·A<sub>ch</sub>)] = {fmt(r.effectiveEmissivity,4)}</p><p>ε = 0 時，所有輻射項直接設為 0。</p><p className="formula-line">A<sub>direct</sub> = {finsUp ? "2LH + Nt𝒻L + 2tᵦL + 2Wtᵦ + 2NHt𝒻" : "2LH + Nt𝒻H + 2tᵦH + 2Wtᵦ + 2NLt𝒻"} = {fmt(r.directRadiationArea,5)} m²</p><p className="formula-line">Q<sub>rad,hs</sub> = σ·(ε<sub>eff</sub>A<sub>open</sub> + εA<sub>direct</sub>)·(T<sub>hs,K</sub>⁴ − T<sub>a,K</sub>⁴)</p><p className="formula-line">Q<sub>rad,case</sub> = εσ·({finsUp ? "WL + 2XL" : "WH + 2XH"} + 2WX)·(T<sub>case,K</sub>⁴ − T<sub>a,K</sub>⁴)</p><p>σ = 5.670374419 × 10⁻⁸ W/(m²·K⁴)。散熱片輻射 = {fmt(r.sinkRadiation)} W；機殼輻射 = {fmt(r.chassisRadiation)} W。</p><p>此腔體模型忽略通道沿 {finsUp ? "L" : "H"} 方向的兩端開口、局部視角係數與非均勻 radiosity，屬尺寸評估近似。</p></div>
           <h3 className="formula-heading">5. 總散熱量與輻射占比</h3>
           <div className="formula-block"><p className="formula-line">Q<sub>total</sub> = Q<sub>conv</sub> + Q<sub>rad</sub> = {fmt(r.convection)} + {fmt(r.radiation)} = <strong>{fmt(r.total)} W</strong></p><p className="formula-line">輻射占比 = Q<sub>rad</sub> / Q<sub>total</sub> × 100% = <strong>{r.total > 0 ? fmt(r.radiationPercent) + "%" : "無熱交換，不適用"}</strong></p></div>
         </>}
       </AccordionContent></AccordionItem>
       <AccordionItem value="assumptions"><AccordionTrigger className="accordion-trigger"><span className="flex items-center gap-3"><CircleHelp size={20}/>適用條件與參考資料</span></AccordionTrigger><AccordionContent className="accordion-body">
-        <p><strong>適用：</strong>{finsUp ? "開放空間、無風扇，基板 W × H 水平、鰭片沿 L 朝上，通道兩端與上方暢通。X 為基板下方機殼高度，不包含 tᵦ 或 L。" : "開放空間、無風扇、鰭片通道沿 H 垂直、上下進出口暢通的自然對流初步尺寸評估。X 定義為基板後方的機殼深度，不包含 tᵦ 或 L。"}</p>
-        {finsUp && <p className="model-note">水平式採 Tari & Mehrtash (2013)，以本工具符號表示，幾何範圍為 0.35 ≤ S/L ≤ 2.94、0.015 ≤ L/H ≤ 0.1、0.026 ≤ S/H ≤ 0.059，且修正 Ra′ &lt; 5,000。圖片尺寸的 L/H ≈ 0.1024，切換水平後會標示外推估算。</p>}
+        <p><strong>適用：</strong>{finsUp ? "開放空間、無風扇，基板 W × L 水平、鰭片沿 H 朝上，通道兩端與上方暢通。X 為基板下方機殼高度，不包含 tᵦ 或 H。" : "開放空間、無風扇、鰭片通道沿 H 垂直、上下進出口暢通的自然對流初步尺寸評估。X 定義為基板後方的機殼深度，不包含 tᵦ 或 L。"}</p>
+        {finsUp && <p className="model-note">水平式採 Tari & Mehrtash (2013)，以本工具符號表示，幾何範圍為 0.35 ≤ S/H ≤ 2.94、0.015 ≤ H/L ≤ 0.1、0.026 ≤ S/L ≤ 0.059，且修正 Ra′ &lt; 5,000。圖片範例切換為水平模式時，H/L ≈ 0.1024，因此標示外推估算。</p>}
         <p className="model-note">輸入的散熱片溫度視為整個散熱片的均勻表面溫度，等效鰭片效率 η = 1；若把它當作局部基板最高溫，可能高估散熱能力。未求解熱源接觸熱阻、基板擴散、鰭片溫度梯度及殼內熱傳。</p>
         <p>{finsUp ? "機殼假設四側及下底面完全暴露於空氣，底面懸空；頂面與散熱片貼合。" : "機殼假設背面、左右及上下共五面完全暴露於空氣。"}機殼與散熱片使用同一放射率。安裝壁面、障礙物或鰭片較短時，需再修正遮蔽與氣流影響。周圍均溫且表面暴露條件相同時，旋轉只改變本模型的對流，輻射面積與估算值維持相同。</p>
-        <p>圖片範例：14 片、ε = 0.8、X/W/H = 67/195.2/312.4 mm、L/tᵦ/t𝒻 = 32/10/2 mm、環境/散熱片/機殼 = 25/70/65 °C。圖片標示 156.9 W、輻射占比 38.0%；本工具以公開關係式與上述面積近似重新估算，結果不必相同。</p>
+        <p>圖片範例（直立模式）：14 片、ε = 0.8、X/W/H = 67/195.2/312.4 mm、L/tᵦ/t𝒻 = 32/10/2 mm、環境/散熱片/機殼 = 25/70/65 °C。圖片標示 156.9 W、輻射占比 38.0%；本工具以公開關係式與上述面積近似重新估算，結果不必相同。</p>
         <ul className="sources">
           <li><a href="https://doi.org/10.1016/j.applthermaleng.2013.09.003" target="_blank" rel="noreferrer">Tari & Mehrtash (2013) — 水平及小傾角鰭片散熱片</a></li>
           <li><a href="https://pure-oai.bham.ac.uk/ws/files/68301412/Revised_Manuscript.pdf" target="_blank" rel="noreferrer">González Gallero 等 (2019) — 表 4：水平式與幾何適用範圍</a></li>
@@ -251,12 +251,12 @@ export default function HeatsinkApp() {
             <div className="orientation-setting">
               <label className="setting-label" htmlFor="orientation">擺放方式</label>
               <Select value={orientation} onValueChange={(value) => { setOrientation(value as Orientation); setSampleMessage(""); }}><SelectTrigger id="orientation" className="app-select" aria-describedby="orientation-hint"><SelectValue/></SelectTrigger><SelectContent position="popper"><SelectItem className="app-select-item" value="vertical">直立擺放・通道垂直</SelectItem><SelectItem className="app-select-item" value="horizontal-up">水平擺放・鰭片朝上</SelectItem></SelectContent></Select>
-              <p className="settings-hint" id="orientation-hint">{finsUp ? "基板 W × H 水平，L 為向上的鰭片高度。通道兩端與上方需保持暢通。" : "H 為垂直方向，鰭片通道上下需保持暢通。"}切換時保留尺寸數值。</p>
+              <p className="settings-hint" id="orientation-hint">{finsUp ? "基板 W × L 水平，H 為向上的鰭片高度。通道兩端與上方需保持暢通。" : "H 為垂直方向，鰭片通道上下需保持暢通。"}切換時保留尺寸數值。</p>
             </div>
             <div className="field-grid">
               {field("fins", "鰭片數量", "N", "片")}{field("emissivity", "放射率", "ε", "0–1")}
-              {field("width", "散熱片寬", "W")}{field("height", finsUp ? "基板長度" : "垂直高度", "H")}
-              {field("finLength", finsUp ? "鰭片高度" : "鰭片伸出", "L")}{field("chassisDepth", finsUp ? "機殼高度" : "機殼深度", "X")}
+              {field("width", "散熱片寬", "W")}{field("height", finsUp ? "基板長度" : "垂直高度", finsUp ? "L" : "H")}
+              {field("finLength", finsUp ? "鰭片高度" : "鰭片伸出", finsUp ? "H" : "L")}{field("chassisDepth", finsUp ? "機殼高度" : "機殼深度", "X")}
               {field("baseThickness", "基板厚度", "tᵦ")}{field("finThickness", "鰭片厚度", "t𝒻")}
             </div>
             <dl className="derived-values"><div><dt>鰭片間距 S</dt><dd>{fmt(result?.spacing)} <small>mm</small></dd></div><div><dt>散熱片重量</dt><dd>{fmt(result?.massGrams)} <small>g</small></dd></div></dl>
@@ -282,8 +282,8 @@ export default function HeatsinkApp() {
             <dl className="summary-details"><div><dt><i className="legend-dot" style={{background:"#81b7fb"}}/>自然對流</dt><dd>{fmt(result?.convection)} <small>W</small></dd></div><div><dt><i className="legend-dot" style={{background:"#f3bc76"}}/>熱輻射</dt><dd>{fmt(result?.radiation)} <small>W</small></dd></div><div><dt>輻射占比</dt><dd>{fmt(result && result.total > 0 ? result.radiationPercent : null)} <small>%</small></dd></div></dl>
           </div></section>
           <section className="panel drawing-panel"><div className="panel-body"><h2 className="panel-heading"><Ruler/>尺寸示意</h2>
-            <div className="drawing-layout"><DimensionDrawing fins={input.fins} includeChassis={includeChassis} orientation={orientation}/><dl className="drawing-meta"><div><dt>{finsUp ? "水平基板 W × H" : "散熱片外形 W × H"}</dt><dd>{fmt(valid ? input.width : null)} × {fmt(valid ? input.height : null)} <small>mm</small></dd></div><div><dt>散熱片{finsUp ? "高度" : "深度"} L + tᵦ</dt><dd>{fmt(valid ? input.finLength + input.baseThickness : null)} <small>mm</small></dd></div><div className="model-count"><dt>{includeChassis ? `組裝總${finsUp ? "高度" : "深度"} X + tᵦ + L` : "鰭片數量"}</dt><dd>{includeChassis ? fmt(result?.totalDepth) : fmt(valid ? input.fins : null,0)} <small>{includeChassis ? "mm" : "片"}</small></dd></div></dl></div>
-            <p className="diagram-footnote">{finsUp ? "L 向上；H 沿水平通道，X 是基板下方機殼高度。" : "氣流沿 H 向上。X 為基板後方機殼深度。"}示意圖非等比例{input.fins > 24 ? "，以 24 片代表實際鰭片" : ""}。</p>
+            <div className="drawing-layout"><DimensionDrawing fins={input.fins} includeChassis={includeChassis} orientation={orientation}/><dl className="drawing-meta"><div><dt>{finsUp ? "水平基板 W × L" : "散熱片外形 W × H"}</dt><dd>{fmt(valid ? input.width : null)} × {fmt(valid ? input.height : null)} <small>mm</small></dd></div><div><dt>散熱片{finsUp ? "高度 H" : "深度 L"} + tᵦ</dt><dd>{fmt(valid ? input.finLength + input.baseThickness : null)} <small>mm</small></dd></div><div className="model-count"><dt>{includeChassis ? `組裝總${finsUp ? "高度" : "深度"} X + tᵦ + ${finsUp ? "H" : "L"}` : "鰭片數量"}</dt><dd>{includeChassis ? fmt(result?.totalDepth) : fmt(valid ? input.fins : null,0)} <small>{includeChassis ? "mm" : "片"}</small></dd></div></dl></div>
+            <p className="diagram-footnote">{finsUp ? "H 向上，L 沿水平通道，X 是基板下方機殼高度。" : "氣流沿 H 向上。X 為基板後方機殼深度。"}示意圖非等比例{input.fins > 24 ? "，以 24 片代表實際鰭片" : ""}。</p>
           </div></section>
           <section className="panel chart-panel"><div className="panel-body"><h2 className="panel-heading"><ChartNoAxesCombined/>鰭片數量比較<div className="fin-adjust heading-action"><button aria-label="減少一片鰭片" disabled={!valid || input.fins<=2} onClick={()=>update("fins",String(input.fins-1))}><Minus size={17}/></button><span>{valid ? input.fins : "—"} 片</span><button aria-label="增加一片鰭片" disabled={!valid || input.fins>=200 || (input.fins+1)*input.finThickness>=input.width} onClick={()=>update("fins",String(input.fins+1))}><Plus size={17}/></button></div></h2>
             <p className="chart-description">{finsUp ? "水平鰭片朝上" : "直立擺放"}；固定其他條件，比較目前數量前後各 5 片。圓點為目前設定。</p>

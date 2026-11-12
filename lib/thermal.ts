@@ -80,9 +80,9 @@ export function horizontalFinArray(surface: number, ambient: number, spacing: nu
   const modifiedRayleigh = rayleigh * heightLength ** 0.5 * spacingHeight ** 0.38;
   const nusselt = 0.0915 * modifiedRayleigh ** 0.436;
   const limits = [
-    { name: "S/L", value: spacingHeight, min: 0.35, max: 2.94 },
-    { name: "L/H", value: heightLength, min: 0.015, max: 0.1 },
-    { name: "S/H", value: spacingLength, min: 0.026, max: 0.059 },
+    { name: "S/H", value: spacingHeight, min: 0.35, max: 2.94 },
+    { name: "H/L", value: heightLength, min: 0.015, max: 0.1 },
+    { name: "S/L", value: spacingLength, min: 0.026, max: 0.059 },
   ];
   const outsideLimits = limits.filter(({ value, min, max }) => value < min - 1e-12 || value > max + 1e-12);
   const rayleighInRange = modifiedRayleigh < 5000;
@@ -131,7 +131,7 @@ export function calculate(input: Input, includeChassis = true, orientation: Orie
   const massGrams = ALUMINUM_DENSITY * (w * h * tb + n * tf * h * l) * 1000;
   const warnings: string[] = [];
   if (spacing * 1000 < MIN_RECOMMENDED_GAP) warnings.push(`目前間距小於 ${MIN_RECOMMENDED_GAP} mm，低於圖片的間距條件；仍顯示估算，但不列為建議點。`);
-  if (h < 5 * l || h < 5 * spacing) warnings.push("H 相對於 L 或間距 S 較短，長通道與二維輻射近似的誤差可能增加。");
+  if (h < 5 * l || h < 5 * spacing) warnings.push(`${finsUp ? "L 相對於 H" : "H 相對於 L"} 或間距 S 較短，長通道與二維輻射近似的誤差可能增加。`);
   if (!finsUp && sinkPlate.rayleigh > 1e9) warnings.push("高度方向 Ra 超過 10⁹；外側平板已改用全域式，鰭片通道式的適用性需另外確認。");
   if (finsUp && horizontalArray.outsideLimits.length > 0) {
     const bounds = horizontalArray.outsideLimits.map(({ name, value, min, max }) => `${name} = ${value.toFixed(3)}（範圍 ${min}–${max}）`).join("、");
