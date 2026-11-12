@@ -1,7 +1,7 @@
-/* HS Design: scope-relative offline shell; generated typography-compact-20261003-v4. */
+/* HS Design: scope-relative offline shell; generated 40dc3d0f7168df13. */
 const PREFIX = 'hs-pages-' + new URL(self.registration.scope).pathname;
-const CACHE = PREFIX + 'typography-compact-20261003-v3-hero4';
-const ASSETS = ["index.html","manifest.webmanifest","favicon.png","assets/index-LEJ3BTSA.css","assets/index-aCC7fdSN.js","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png"].map(p => new URL(p, self.registration.scope).href);
+const CACHE = PREFIX + '40dc3d0f7168df13';
+const ASSETS = ["index.html","manifest.webmanifest","favicon.png","assets/index-O-vWfDjV.css","assets/index-deB1Vl6l.js","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png"].map(p => new URL(p, self.registration.scope).href);
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
   try {
@@ -11,7 +11,6 @@ self.addEventListener('install', event => event.waitUntil((async () => {
       if (url.endsWith('/index.html') && !(await response.clone().text()).includes('散熱片計算')) throw new Error('Invalid app shell');
       await cache.put(url, response);
     }
-    await self.skipWaiting();
   } catch (error) { await caches.delete(CACHE); throw error; }
 })()));
 self.addEventListener('activate', event => event.waitUntil((async () => {

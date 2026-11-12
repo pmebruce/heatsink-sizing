@@ -1,9 +1,8 @@
-/** Dimension symbols stay attached to the same physical parts after rotation. */
 export function HorizontalHeatsinkDrawing({ fins, includeChassis }: { fins: number; includeChassis: boolean }) {
   const count = Math.min(24, Math.max(2, Number.isFinite(fins) ? Math.round(fins) : 14));
   const p = (u: number, v: number, z: number) => `${58 + u * 162 + v * 105},${222 + u * 38 - v * 65 - z * 86}`;
   const face = (points: [number, number, number][]) => points.map(([u, v, z]) => p(u, v, z)).join(" ");
-  return <svg className="technical-drawing" viewBox="0 0 380 340" role="img" aria-label="水平擺放、鰭片朝上的散熱片尺寸示意圖。W 與 H 是水平基板的寬與長，L 是鰭片向上的高度，X 是基板下方機殼高度。">
+  return <svg className="technical-drawing" viewBox="0 0 380 340" role="img" aria-label="水平擺放、鰭片朝上的散熱片尺寸示意圖。W 與 L 是水平基板的寬與長，H 是鰭片向上的高度，X 是基板下方機殼高度。">
     <defs>
       <marker id="horizontal-dimension-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M10 5 0 0v10Z" fill="#587381"/></marker>
       <linearGradient id="horizontal-fin-face" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor="#d4e4eb"/><stop offset="1" stopColor="#8baab8"/></linearGradient>
@@ -29,7 +28,7 @@ export function HorizontalHeatsinkDrawing({ fins, includeChassis }: { fins: numb
       <path d="M55 277l-4 16M213 308l-4 21M235 304l8 13M338 241l8 13M28 233h18M28 261h18M67 229l-17-14H28"/>
     </g>
     <g className="drawing-label" fontSize="17">
-      <text x="358" y="154">L</text><text x="121" y="329">W</text><text x="300" y="294">H</text><text x="14" y="253">X</text><text x="9" y="219">tᵦ</text>
+      <text x="358" y="154">H</text><text x="121" y="329">W</text><text x="300" y="294">L</text><text x="14" y="253">X</text><text x="9" y="219">tᵦ</text>
     </g>
     <g transform="translate(18,24)">
       <path d="M0 28V0h6v28h31V0h6v28" fill="#c0d6df" stroke="#6b929f"/>
