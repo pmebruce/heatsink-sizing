@@ -35,8 +35,8 @@ function Field({ name, label, symbol, unit, value, onChange, error }: FieldProps
   </div>;
 }
 
-export function DimensionDrawing({ fins, includeChassis, orientation }: { fins: number; includeChassis: boolean; orientation: Orientation }) {
-  if (orientation === "horizontal-up") return <HorizontalHeatsinkDrawing fins={fins} includeChassis={includeChassis}/>;
+export function DimensionDrawing({ fins, includeChassis, orientation, spacing }: { fins: number; includeChassis: boolean; orientation: Orientation; spacing?: number }) {
+  if (orientation === "horizontal-up") return <HorizontalHeatsinkDrawing fins={fins} includeChassis={includeChassis} spacingLabel={spacing == null ? undefined : `${fmt(spacing,2)} mm`}/>;
   const count = Math.min(24, Math.max(2, Number.isFinite(fins) ? Math.round(fins) : 14));
   const p = (u: number, v: number, z: number) => `${92 + u * 150 + z * 64},${65 + u * 27 - z * 32 + v * 174}`;
   const face = (points: [number, number, number][]) => points.map(([u, v, z]) => p(u, v, z)).join(" ");
@@ -282,7 +282,7 @@ export default function HeatsinkApp() {
             <dl className="summary-details"><div><dt><i className="legend-dot" style={{background:"#81b7fb"}}/>自然對流</dt><dd>{fmt(result?.convection)} <small>W</small></dd></div><div><dt><i className="legend-dot" style={{background:"#f3bc76"}}/>熱輻射</dt><dd>{fmt(result?.radiation)} <small>W</small></dd></div><div><dt>輻射占比</dt><dd>{fmt(result && result.total > 0 ? result.radiationPercent : null)} <small>%</small></dd></div></dl>
           </div></section>
           <section className="panel drawing-panel"><div className="panel-body"><h2 className="panel-heading"><Ruler/>尺寸示意</h2>
-            <div className="drawing-layout"><DimensionDrawing fins={input.fins} includeChassis={includeChassis} orientation={orientation}/><dl className="drawing-meta"><div><dt>{finsUp ? "水平基板 W × L" : "散熱片外形 W × H"}</dt><dd>{fmt(valid ? input.width : null)} × {fmt(valid ? input.height : null)} <small>mm</small></dd></div><div><dt>散熱片{finsUp ? "高度 H" : "深度 L"} + tᵦ</dt><dd>{fmt(valid ? input.finLength + input.baseThickness : null)} <small>mm</small></dd></div><div className="model-count"><dt>{includeChassis ? `組裝總${finsUp ? "高度" : "深度"} X + tᵦ + ${finsUp ? "H" : "L"}` : "鰭片數量"}</dt><dd>{includeChassis ? fmt(result?.totalDepth) : fmt(valid ? input.fins : null,0)} <small>{includeChassis ? "mm" : "片"}</small></dd></div></dl></div>
+            <div className="drawing-layout"><DimensionDrawing fins={input.fins} includeChassis={includeChassis} orientation={orientation} spacing={result?.spacing}/><dl className="drawing-meta"><div><dt>{finsUp ? "水平基板 W × L" : "散熱片外形 W × H"}</dt><dd>{fmt(valid ? input.width : null)} × {fmt(valid ? input.height : null)} <small>mm</small></dd></div><div><dt>散熱片{finsUp ? "高度 H" : "深度 L"} + tᵦ</dt><dd>{fmt(valid ? input.finLength + input.baseThickness : null)} <small>mm</small></dd></div><div className="model-count"><dt>{includeChassis ? `組裝總${finsUp ? "高度" : "深度"} X + tᵦ + ${finsUp ? "H" : "L"}` : "鰭片數量"}</dt><dd>{includeChassis ? fmt(result?.totalDepth) : fmt(valid ? input.fins : null,0)} <small>{includeChassis ? "mm" : "片"}</small></dd></div></dl></div>
             <p className="diagram-footnote">{finsUp ? "H 向上，L 沿水平通道，X 是基板下方機殼高度。" : "氣流沿 H 向上。X 為基板後方機殼深度。"}示意圖非等比例{input.fins > 24 ? "，以 24 片代表實際鰭片" : ""}。</p>
           </div></section>
           <section className="panel chart-panel"><div className="panel-body"><h2 className="panel-heading"><ChartNoAxesCombined/>鰭片數量比較<div className="fin-adjust heading-action"><button aria-label="減少一片鰭片" disabled={!valid || input.fins<=2} onClick={()=>update("fins",String(input.fins-1))}><Minus size={17}/></button><span>{valid ? input.fins : "—"} 片</span><button aria-label="增加一片鰭片" disabled={!valid || input.fins>=200 || (input.fins+1)*input.finThickness>=input.width} onClick={()=>update("fins",String(input.fins+1))}><Plus size={17}/></button></div></h2>

@@ -1,8 +1,8 @@
-export function HorizontalHeatsinkDrawing({ fins, includeChassis }: { fins: number; includeChassis: boolean }) {
+export function HorizontalHeatsinkDrawing({ fins, includeChassis, spacingLabel }: { fins: number; includeChassis: boolean; spacingLabel?: string }) {
   const count = Math.min(24, Math.max(2, Number.isFinite(fins) ? Math.round(fins) : 14));
   const p = (u: number, v: number, z: number) => `${58 + u * 162 + v * 105},${222 + u * 38 - v * 65 - z * 86}`;
   const face = (points: [number, number, number][]) => points.map(([u, v, z]) => p(u, v, z)).join(" ");
-  return <svg className="technical-drawing" viewBox="0 0 380 340" role="img" aria-label="水平擺放、鰭片朝上的散熱片尺寸示意圖。W 與 L 是水平基板的寬與長，H 是鰭片向上的高度，X 是基板下方機殼高度。">
+  return <svg className="technical-drawing" viewBox="0 0 380 340" role="img" aria-label={`水平擺放、鰭片朝上的散熱片尺寸示意圖。W 與 L 是水平基板的寬與長，H 是鰭片向上的高度，X 是基板下方機殼高度。${spacingLabel ? `鰭片間距 S 為 ${spacingLabel}。` : ""}`}>
     <defs>
       <marker id="horizontal-dimension-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M10 5 0 0v10Z" fill="#587381"/></marker>
       <linearGradient id="horizontal-fin-face" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor="#d4e4eb"/><stop offset="1" stopColor="#8baab8"/></linearGradient>
@@ -36,6 +36,7 @@ export function HorizontalHeatsinkDrawing({ fins, includeChassis }: { fins: numb
       <text x="18" y="5" className="drawing-label" fontSize="14">S</text>
       <path d="M42 7l11-9h12" stroke="#587381" fill="none"/>
       <text x="67" y="3" className="drawing-label" fontSize="14">t𝒻</text>
+      {spacingLabel && <text x="0" y="47" className="drawing-label" fontSize="14">S = {spacingLabel}</text>}
     </g>
     <g transform="translate(348,40)" fill="none" stroke="#0c8b83" strokeWidth="2"><path d="M0 29V0m-5 6 5-6 5 6"/></g>
     <text x="334" y="28" fill="#348079" fontSize="13">向上</text>
